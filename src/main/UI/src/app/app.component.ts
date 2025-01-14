@@ -27,13 +27,13 @@ export class AppComponent implements OnInit{
   request!:ReserveRoomRequest;
   currentCheckInVal!:string;
   currentCheckOutVal!:string;
+  messages: string[] = [];
 
     ngOnInit(){
       this.roomsearch= new FormGroup({
         checkin: new FormControl(' '),
         checkout: new FormControl(' ')
       });
-
  //     this.rooms=ROOMS;
 
 
@@ -44,6 +44,20 @@ export class AppComponent implements OnInit{
       this.currentCheckInVal = x.checkin;
       this.currentCheckOutVal = x.checkout;
     });
+      this.fetchMessages();
+
+  }
+
+  fetchMessages(): void {
+    this.httpClient.get<string[]>('http://localhost:8080/messages').subscribe(
+      (data) => {
+        console.log('Fetched messages:', data); // Log the data to verify
+        this.messages = data;
+      },
+      (error) => {
+        console.error('Error fetching messages:', error);
+      }
+    );
   }
 
     onSubmit({value,valid}:{value:Roomsearch,valid:boolean}){
