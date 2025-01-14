@@ -28,6 +28,7 @@ export class AppComponent implements OnInit{
   currentCheckInVal!:string;
   currentCheckOutVal!:string;
   messages: string[] = [];
+  presentationTimes: { [key: string]: string } = {};
 
     ngOnInit(){
       this.roomsearch= new FormGroup({
@@ -45,6 +46,7 @@ export class AppComponent implements OnInit{
       this.currentCheckOutVal = x.checkout;
     });
       this.fetchMessages();
+      this.fetchPresentationTimes();
 
   }
 
@@ -56,6 +58,16 @@ export class AppComponent implements OnInit{
       },
       (error) => {
         console.error('Error fetching messages:', error);
+      }
+    );
+  }
+  fetchPresentationTimes(): void {
+    this.httpClient.get<{ [key: string]: string }>('http://localhost:8080/presentation-times').subscribe(
+      (data) => {
+        this.presentationTimes = data;
+      },
+      (error) => {
+        console.error('Error fetching presentation times:', error);
       }
     );
   }
